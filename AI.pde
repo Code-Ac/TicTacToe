@@ -1,3 +1,4 @@
+// Lässt die AI ziehen.
 void aiMakeMove() {
   class AILösung {
     // Felder, die belegt sein müssen, damit

@@ -1,13 +1,16 @@
+// Aufgerufen durch weiterleitung von <mousePressed> wenn <menuOffen>.
 void menuMousePressed() {
+  // Sorgt dafür, das das Spiel noch angezeicht wird, nachdem jemand gewonnen hat.
   if (!menuGezeichnet) {
     menuGezeichnet = true;
     menuZeichnen();
     return;
   }
   
-  // Start knopf
+  // Wenn Startknopf gedrückt
   if (mouseX > (width-100)/2-10 && mouseX < (width-100)/2+110 &&
       mouseY > 90 && mouseY < 150) {
+    // AI schwierigkeit setzen
     if (modus != "Spieler gegen Spieler") {
       switch (modus) {
       case "Einfach":
@@ -24,7 +27,10 @@ void menuMousePressed() {
         break;
       }
     }
+    // Notiz an Console ausgeben
     println("\n[MS] Neues Spiel! Schwierigkeit: " + Double.toString(chanse).substring(0, 3));
+    // Gegenteil von Startspieler setzen und <spielerWechsel> aufrufen, 
+    // um nachricht zu aktualisieren. Dann Menü schließen und Spiel zeichnen.
     spielerAmZug = KREUZ;
     spielerWechsel();
     menuOffen = false;
@@ -32,7 +38,8 @@ void menuMousePressed() {
     spielZeichnen();
     return;
   }
-  // AI Knöpfe
+
+  // Wenn AI Knöpfe gedrückt, neuen Modus setzen.
   String modusDavor = modus;
   if (mouseY > height-60 && mouseY < height-30) {
     if (mouseX > width/3 && mouseX < width/3*2) {
@@ -49,13 +56,17 @@ void menuMousePressed() {
       modus = "Unmöglich";
     }
   }
+  // Wenn sich modus geändert hat, Punktestand zurücksetzen
   if (modusDavor != modus) {
     punkteKreuz = 0;
     punkteKreis = 0;
   }
+
+  // Menü aktualisieren
   menuZeichnen();
 }
 
+// Zeichnet das Hauptmenü
 void menuZeichnen() {
   noStroke();
   fill(255);
@@ -71,10 +82,10 @@ void menuZeichnen() {
     }
   }
 
-  // Startknopf
+  // Startknopf zeichnen
   knopfZeichnen("START", (width-100)/2, 100, 100, 40, color(0, 150, 0), 40);
   
-  // Punktestand
+  // Punktestand zeichnen
   stroke(0);
   strokeWeight(1);
   textSize(20);
@@ -85,11 +96,13 @@ void menuZeichnen() {
   text(punkteKreis, width/2+20, 220);
   text(punkteKreuz, width/2+20, 245);
 
-  // AI Einstellungen
+  // AI Einstellungen zeichnen
   noStroke();
   fill(160);
   rect(0, height-60, width, 60);
   knopfZeichnen("AI Modus", 10, height-50, width/3-20, 10, 120, 20);
+
+  // Entsprechend aktuellen modus hintergrund für Auswahl zeichnen
   int modusX = 10;
   int modusY = height-50;
   switch (modus) {
@@ -115,6 +128,7 @@ void menuZeichnen() {
     break;
   }
   knopfZeichnen("", modusX, modusY, width/3-20, 10, color(100, 100, 200), 20);
+
   textSize(20);
   text("AI aus", 10, height-10);
   text("Einfach", width/3+10, height-40);
@@ -124,7 +138,7 @@ void menuZeichnen() {
   nachricht("Modus: " + modus);
 }
 
-// Zeichnet einen Knopf mit abgerundeten Ecken
+// Zeichnet einen Knopf mit abgerundeten Ecken.
 void knopfZeichnen(String text, int x, int y, int xs, int ys, color farbe, int size) {
   noStroke();
   fill(farbe);
@@ -132,6 +146,8 @@ void knopfZeichnen(String text, int x, int y, int xs, int ys, color farbe, int s
   stroke(farbe);
   strokeWeight(20);
   noFill();
+  // Linien werden als Rand verwendet, um Ecken abzurunden. 
+  // Hat den nebeneffekt, das Knopf immer 10 Pixel größer wird als geplant.
   line(x, y, x, y+ys);
   line(x+xs, y+5, x+xs, y+ys);
   line(x, y, x+xs, y);
